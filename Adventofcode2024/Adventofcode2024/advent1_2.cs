@@ -12,12 +12,15 @@ foreach (string line in lines)
     column1.Add(int.Parse(columns[0]));
     column2.Add(int.Parse(columns[1]));
 }
-
-int result = 0;
 column1.Sort();
 column2.Sort();
-for(int i =0; i < 1000; i++)
+int similar = 0;
+foreach(int num in column1)
 {
-    result += Math.Abs(column2[i] - column1[i]);
+    foreach (int num1 in column2)
+    {
+        if (num == num1)
+            similar += num;
+    }
 }
-Console.Write(result);
+Console.WriteLine(similar);
