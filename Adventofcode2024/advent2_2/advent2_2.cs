@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
-//create output result, and source for output tfs, and read all lines
+//create source for output tfs, and read all lines
 List<bool> tfs = new List<bool>();
-int result = 0;
 string[] lines = File.ReadAllLines("C:\\Users\\sajaw\\Documents\\Github\\Adventofcode2024\\AdventCalender\\Adventofcode2024\\advent2_1\\Data2.csv");
 List<List<int>> rows = new();
 //checking each line's validity
@@ -15,89 +15,43 @@ foreach (string line in lines)
     for (int i = 0; i < nums.Length; i++)
         row.Add(int.Parse(nums[i]));
     rows.Add(row);
-    //id is initial increasing/decreasing
-    bool? id = null;
-    //tf is final answer to whether the row is valid
-    bool tf = true;
-    for (int i = 0; i < row.Count - 1; i++)
-    {
-        //assign initial increasing/decreasing value
-        if (row[i] - row[i + 1] > 0)
-        {
-            id = true;
-            break;
-        }
-        else if (row[i] - row[i + 1] < 0)
-        {
-            id = false;
-            break;
-        }
-    }
-
-    if (id == null)
-    {
-        tf = false;
-        continue;
-    }
-
-    for (int i = 0; i < row.Count - 1; i++)
-    {
-        //check whether it flips increasing/decreasing direction, or drops to 0
-        if (row[i] - row[i + 1] < 0 && id == false || row[i] - row[i + 1] > 0 && id == true) { }
-        else
-        {
-            tf = false;
-            break;
-        }
-        //check whether it increases or decreases too much
-        if (Math.Abs((row[i] - row[i + 1])) < 4) { }
-        else
-        {
-            tf = false;
-            break;
-        }
-    }
-    tfs.Add(tf);
+    tfs.Add(valid(row));
 }
 //recheck false with removals
-List<int> temp = new();
+
 for (int i = 0; i < tfs.Count; i++)
 {
     if (!tfs[i])
     {
-        temp = rows[i];
-        bool tf = false;
-        for (int j = 0; j < temp.Count; j++)
+        List<int> temp = new(rows[i]);
+        int length = temp.Count;
+        for (int j = 0; j < length; j++)
         {
-            temp.Remove(j)
+            temp = new(rows[i]);
+            temp.RemoveAt(j);
+            if (valid(temp))
+            {
+                tfs[i] = true;
+            }
         }
-        tfs[i] = tf;
     }
 }
 //tally up and print
-foreach (bool tf in tfs)
-{
-    if (tf)
-        result++;
-}
+int result = tfs.Count(tf => tf); 
 Console.Write(result);
-
-
-bool valid(int)
+bool valid(List<int> row1)
 {
     //id is initial increasing/decreasing
     bool? id = null;
-    //tf is final answer to whether the row is valid
-    bool tf = true;
-    for (int i = 0; i < row.Count - 1; i++)
+    for (int i = 0; i < row1.Count - 1; i++)
     {
         //assign initial increasing/decreasing value
-        if (row[i] - row[i + 1] > 0)
+        if (row1[i] - row1[i + 1] > 0)
         {
             id = true;
             break;
         }
-        else if (row[i] - row[i + 1] < 0)
+        else if (row1[i] - row1[i + 1] < 0)
         {
             id = false;
             break;
@@ -106,25 +60,24 @@ bool valid(int)
 
     if (id == null)
     {
-        tf = false;
-        continue;
+        return false;
     }
 
-    for (int i = 0; i < row.Count - 1; i++)
+    for (int i = 0; i < row1.Count - 1; i++)
     {
         //check whether it flips increasing/decreasing direction, or drops to 0
-        if (row[i] - row[i + 1] < 0 && id == false || row[i] - row[i + 1] > 0 && id == true) { }
+        if (row1[i] - row1[i + 1] < 0 && id == false || row1[i] - row1[i + 1] > 0 && id == true) { }
         else
         {
-            tf = false;
-            break;
+            return false;
         }
         //check whether it increases or decreases too much
-        if (Math.Abs((row[i] - row[i + 1])) < 4) { }
+        if (Math.Abs((row1[i] - row1[i + 1])) < 4) { }
         else
         {
-            tf = false;
-            break;
+            return false;
         }
     }
+
+    return true;
 }
