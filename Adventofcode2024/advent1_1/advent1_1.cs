@@ -4,7 +4,7 @@ using System.Linq;
 List<int> column1 = new List<int>();
 List<int> column2 = new List<int>();
 
-string[] lines = File.ReadAllLines("C:\\Users\\sajaw\\Documents\\Github\\Adventofcode2024\\AdventCalender\\Adventofcode2024\\Adventofcode2024\\Data1.csv");
+string[] lines = File.ReadAllLines("C:\\Users\\sajaw\\Documents\\Github\\Adventofcode2024\\AdventCalender\\Adventofcode2024\\advent1_1\\Data1.csv");
 
 foreach (string line in lines)
 {
